@@ -2,26 +2,27 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Catbox Video</title>
+  <title>Catbox Video Centered</title>
   <style>
     html, body {
       margin: 0;
       padding: 0;
+      height: 100%;
       background: black;
       display: flex;
-     vjustify-content:center;
+      justify-content: center; /* по горизонталі */
+      align-items: center;     /* по вертикалі */
     }
     video {
-      display: block;
       width: 100%;
-      height: auto;
+      height: auto;       /* зберігає пропорції */
+      max-height: 100%;   /* не виходить за межі екрану по висоті */
     }
   </style>
 </head>
 <body>
   <video autoplay loop muted playsinline controls>
     <source src="https://files.catbox.moe/j9expa.mp4" type="video/mp4">
-    Ваш браузер не підтримує відео.
   </video>
 </body>
 </html>
