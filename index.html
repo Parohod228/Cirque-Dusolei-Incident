@@ -2,36 +2,26 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Streamable Autoplay</title>
+  <title>Catbox Video</title>
   <style>
     html, body {
       margin: 0;
       padding: 0;
-      height: 100%;
       background: black;
+      display: flex;
+     vjustify-content:center;
     }
-    .video-wrapper {
-      position: relative;
+    video {
+      display: block;
       width: 100%;
-      height: 100%;
-    }
-    .video-wrapper iframe {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      border: none;
+      height: auto;
     }
   </style>
 </head>
 <body>
-  <div class="video-wrapper">
-    <iframe 
-      src="https://streamable.com/13cn63?autoplay=1&muted=1" 
-      allow="autoplay; fullscreen" 
-      allowfullscreen
-    ></iframe>
-  </div>
+  <video autoplay loop muted playsinline controls>
+    <source src="https://files.catbox.moe/j9expa.mp4" type="video/mp4">
+    Ваш браузер не підтримує відео.
+  </video>
 </body>
 </html>
