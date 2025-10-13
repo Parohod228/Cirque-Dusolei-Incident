@@ -1,28 +1,207 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Catbox Video Centered</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Google-style Search with Video and Overlay</title>
   <style>
-    html, body {
+    * {
       margin: 0;
       padding: 0;
-      height: 100%;
+      box-sizing: border-box;
+    }
+
+    body {
+      height: 100vh;
+      width: 100vw;
       background: black;
       display: flex;
-      justify-content: center; /* по горизонталі */
-      align-items: center;     /* по вертикалі */
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      font-family: Arial, sans-serif;
+      overflow: hidden;
     }
-    video {
+
+    /* Фонове відео */
+    .background-video {
+      position: fixed;
+      top: 0;
+      left: 0;
       width: 100%;
-      height: auto;       /* зберігає пропорції */
-      max-height: 100%;   /* не виходить за межі екрану по висоті */
+      height: 100%;
+      object-fit: fill;
+      z-index: -1;
+    }
+
+    /* Контейнер для відео-логотипу та тексту */
+    .logo-container {
+      position: relative;
+      width: 100%;
+      max-width: 600px;
+      max-height: 50vh;
+      margin-bottom: 30px;
+    }
+
+    /* Відео-логотип */
+    .logo-video {
+      width: 100%;
+      height: 100%;
+      object-fit: contain; /* Змінено на contain, щоб відео не обрізалося */
+    }
+
+    /* Текст поверх відео */
+    .overlay-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%); /* Центрування по горизонталі та вертикалі */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      color: white;
+      text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.7);
+      z-index: 10;
+    }
+
+    .overlay-text img {
+      height: 50px;
+      margin-right: 10px;
+    }
+
+    /* Пошукова форма */
+    .search-form {
+      display: flex;
+      width: 100%;
+      max-width: 600px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      border-radius: 24px;
+      overflow: hidden;
+      background: white;
+      z-index: 10;
+    }
+
+    .search-form input[type="text"] {
+      flex: 1;
+      padding: 12px 20px;
+      border: none;
+      font-size: 16px;
+      outline: none;
+    }
+
+    .search-form input[type="submit"] {
+      padding: 0 20px;
+      border: none;
+      background: #f8f9fa;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .search-form input[type="submit"]:hover {
+      background: #f1f3f4;
+    }
+
+    /* Стилі для тріщин */
+    .crack-image {
+      position: fixed;
+      width: 150px; /* Розмір тріщини, можна налаштувати */
+      height: auto;
+      pointer-events: none; /* Щоб тріщини не заважали взаємодії */
+      z-index: 5; /* Вище фонового відео, але нижче форми та логотипу */
+      opacity: 0.9; /* Легка прозорість для ефекту */
+    }
+
+    @media (max-width: 600px) {
+      .logo-container {
+        width: 80%;
+        max-height: 30vh;
+        margin-bottom: 20px;
+      }
+
+      .overlay-text {
+        font-size: 20px;
+      }
+
+      .overlay-text img {
+        height: 36px;
+        margin-right: 5px;
+      }
+
+      .search-form {
+        max-width: 90%;
+      }
+
+      .crack-image {
+        width: 100px; /* Менший розмір для мобільних */
+      }
     }
   </style>
 </head>
 <body>
-  <video autoplay loop muted playsinline controls>
-    <source src="https://files.catbox.moe/j9expa.mp4" type="video/mp4">
+  <!-- Фонове відео -->
+  <video class="background-video" autoplay loop muted playsinline>
+    <source src="https://files.catbox.moe/86garl.mp4" type="video/mp4">
   </video>
+
+  <!-- Контейнер для відео-логотипу та тексту -->
+  <div class="logo-container">
+    <div class="overlay-text">
+      <img src="https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" alt="Google Logo">
+    </div>
+  </div>
+
+  <!-- Пошукова форма -->
+  <form class="search-form" action="https://www.google.com/search" method="get" target="_blank">
+    <input type="text" name="q" placeholder="Search Google">
+    <input type="submit" value="🔍">
+  </form>
+
+  <script>
+    // Масив із новими зображеннями тріщин
+    const crackImages = [
+      'https://i.postimg.cc/vBNkM2jM/broken-glass-PNG35.png',
+      'https://i.postimg.cc/Tw4FGNSn/broken-glass-PNG38.png',
+      'https://i.postimg.cc/pT64xc7F/broken-glass-PNG52.png',
+      'https://i.postimg.cc/0QBFxX3M/foni-papik-pro-58w9-p-kartinki-tresnutoe-steklo-na-prozrachnom-f-3.png',
+      'https://i.postimg.cc/qR5S0DYv/png-klev-5-club-clpr-p-treshchina-na-stekle-png-8.png'
+    ];
+
+    // URL звуку розбитого скла
+    const crackSound = 'https://files.catbox.moe/x3t8op.mp3';
+
+    // Функція для генерації випадкової позиції
+    function getRandomPosition() {
+      const maxX = window.innerWidth - 150; // Віднімаємо ширину тріщини
+      const maxY = window.innerHeight - 150; // Віднімаємо висоту тріщини
+      const randomX = Math.floor(Math.random() * maxX);
+      const randomY = Math.floor(Math.random() * maxY);
+      return { x: randomX, y: randomY };
+    }
+
+    // Функція для вибору випадкового зображення
+    function getRandomCrackImage() {
+      const randomIndex = Math.floor(Math.random() * crackImages.length);
+      return crackImages[randomIndex];
+    }
+
+    // Обробник натискання клавіші
+    document.addEventListener('keydown', () => {
+      // Створюємо зображення тріщини
+      const crack = document.createElement('img');
+      crack.src = getRandomCrackImage();
+      crack.className = 'crack-image';
+      const position = getRandomPosition();
+      crack.style.left = `${position.x}px`;
+      crack.style.top = `${position.y}px`;
+      document.body.appendChild(crack);
+
+      // Відтворюємо звук
+      const audio = new Audio(crackSound);
+      audio.play().catch(error => {
+        console.error('Помилка відтворення звуку:', error);
+      });
+    });
+  </script>
 </body>
 </html>
