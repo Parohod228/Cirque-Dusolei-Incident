@@ -34,7 +34,7 @@
       z-index: -1;
     }
 
-    /* Контейнер для відео-логотипу та тексту */
+    /* Контейнер для логотипу */
     .logo-container {
       position: relative;
       width: 100%;
@@ -43,14 +43,7 @@
       margin-bottom: 30px;
     }
 
-    /* Відео-логотип */
-    .logo-video {
-      width: 100%;
-      height: 100%;
-      object-fit: contain; /* Змінено на contain, щоб відео не обрізалося */
-    }
-
-    /* Текст поверх відео */
+    /* Текст/логотип поверх відео */
     .overlay-text {
       position: absolute;
       top: 50%;
@@ -105,7 +98,7 @@
     /* Стилі для тріщин */
     .crack-image {
       position: fixed;
-      width: 150px; /* Розмір тріщини, можна налаштувати */
+      width: 150px; /* Базовий розмір для десктопів */
       height: auto;
       pointer-events: none; /* Щоб тріщини не заважали взаємодії */
       z-index: 5; /* Вище фонового відео, але нижче форми та логотипу */
@@ -133,7 +126,7 @@
       }
 
       .crack-image {
-        width: 100px; /* Менший розмір для мобільних */
+        width: 100px; /* Базовий розмір для мобільних */
       }
     }
   </style>
@@ -144,7 +137,7 @@
     <source src="https://files.catbox.moe/86garl.mp4" type="video/mp4">
   </video>
 
-  <!-- Контейнер для відео-логотипу та тексту -->
+  <!-- Контейнер для логотипу -->
   <div class="logo-container">
     <div class="overlay-text">
       <img src="https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" alt="Google Logo">
@@ -158,11 +151,10 @@
   </form>
 
   <script>
-    // Масив із новими зображеннями тріщин
+    // Масив із зображеннями тріщин
     const crackImages = [
       'https://i.postimg.cc/vBNkM2jM/broken-glass-PNG35.png',
       'https://i.postimg.cc/Tw4FGNSn/broken-glass-PNG38.png',
-      'https://i.postimg.cc/pT64xc7F/broken-glass-PNG52.png',
       'https://i.postimg.cc/0QBFxX3M/foni-papik-pro-58w9-p-kartinki-tresnutoe-steklo-na-prozrachnom-f-3.png',
       'https://i.postimg.cc/qR5S0DYv/png-klev-5-club-clpr-p-treshchina-na-stekle-png-8.png'
     ];
@@ -172,8 +164,8 @@
 
     // Функція для генерації випадкової позиції
     function getRandomPosition() {
-      const maxX = window.innerWidth - 150; // Віднімаємо ширину тріщини
-      const maxY = window.innerHeight - 150; // Віднімаємо висоту тріщини
+      const maxX = window.innerWidth - 150; // Віднімаємо максимальну ширину тріщини
+      const maxY = window.innerHeight - 150; // Віднімаємо максимальну висоту тріщини
       const randomX = Math.floor(Math.random() * maxX);
       const randomY = Math.floor(Math.random() * maxY);
       return { x: randomX, y: randomY };
@@ -185,6 +177,11 @@
       return crackImages[randomIndex];
     }
 
+    // Функція для генерації випадкового масштабу (50%–150%)
+    function getRandomScale() {
+      return 0.5 + Math.random() * 1.0; // Від 0.5 (50%) до 1.5 (150%)
+    }
+
     // Обробник натискання клавіші
     document.addEventListener('keydown', () => {
       // Створюємо зображення тріщини
@@ -194,6 +191,7 @@
       const position = getRandomPosition();
       crack.style.left = `${position.x}px`;
       crack.style.top = `${position.y}px`;
+      crack.style.transform = `scale(${getRandomScale()})`; // Випадковий масштаб
       document.body.appendChild(crack);
 
       // Відтворюємо звук
